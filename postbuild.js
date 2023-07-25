@@ -1,14 +1,14 @@
 import { copyFile, readdirSync } from "fs";
-import { join, resolve } from "path";
+import { join } from "path";
 
-const sourceFolder = "src/lib";
-const destinationFolder = "dist/lib";
+const sourceFolder = "./src/lib";
+const destinationFolder = "./dist/lib";
 const tsFile = /^(?!.*\.d\.ts$).*\.ts$/;
 
-readdirSync(resolve(sourceFolder)).forEach((filePath) => {
+readdirSync(sourceFolder).forEach((filePath) => {
   if (!tsFile.test(filePath)) {
-    const source = resolve(join(sourceFolder, filePath));
-    const destination = resolve(join(destinationFolder, filePath));
+    const source = join(sourceFolder, filePath);
+    const destination = join(destinationFolder, filePath);
     copyFile(source, destination, (err) => {
       if (err) {
         console.error("Failed to copy", filePath);

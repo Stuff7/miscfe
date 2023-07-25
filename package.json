@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.lib.json",
+    "build": "vite build && tsc -p tsconfig.lib.json & node postbuild.js",
     "dev": "vite --config vite.config.app.ts",
     "build:app": "pnpm type-check && vite build --config vite.config.app.ts",
     "preview": "vite preview --config vite.config.app.ts",

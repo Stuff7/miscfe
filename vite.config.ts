@@ -17,9 +17,7 @@ export default defineConfig({
 
 function getFilePaths(folderPath: string) {
   return readdirSync(resolve(folderPath)).reduce((entries, filePath) => {
-    if (filePath.endsWith(".d.ts")) {
-      entries[filePath] = resolve(join(folderPath, filePath));
-    } else if (filePath.endsWith(".ts")) {
+    if (/^(?!.*\.d\.ts$).*\.ts$/.test(filePath)) {
       const fileName = filePath.slice(0, filePath.lastIndexOf("."));
       entries[`${fileName}.js`] = resolve(join(folderPath, filePath));
     }

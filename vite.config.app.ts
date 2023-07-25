@@ -22,7 +22,6 @@ export default defineConfig({
     alias: {
       "@app": resolve("./src/app"),
       "@lib": resolve("./src/lib"),
-      "@pub": resolve("./public"),
     },
   },
 });

@@ -1,5 +1,6 @@
 import { copyFile, readdirSync } from "fs";
-import { join, resolve } from "path";
+import { join } from "path";
+import { fileURLToPath } from "url";
 
 const sourceFolder = "src/lib";
 const destinationFolder = "dist/lib";
@@ -17,3 +18,8 @@ readdirSync(resolve(sourceFolder)).forEach((filePath) => {
     });
   }
 });
+
+/** @param {string} filepath */
+export function resolve(filepath) {
+  return fileURLToPath(new URL(filepath, import.meta.url));
+}

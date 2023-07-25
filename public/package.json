@@ -1,0 +1,11 @@
+{
+  "name": "miscfe",
+  "version": "1.0.0",
+  "description": "Common utils.",
+  "type": "module",
+  "exports": {
+    "./*": {
+      "import": "./*"
+    }
+  }
+}

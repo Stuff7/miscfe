@@ -1,4 +1,4 @@
-import { fileURLToPath, URL } from "node:url";
+import { resolve } from "node:path";
 
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
@@ -25,7 +25,3 @@ export default defineConfig({
     },
   },
 });
-
-export function resolve(filepath: string) {
-  return fileURLToPath(new URL(filepath, import.meta.url));
-}

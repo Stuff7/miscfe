@@ -1,8 +1,8 @@
 import { copyFile, readdirSync } from "fs";
 import { join } from "path";
 
-const sourceFolder = "./src/lib";
-const destinationFolder = "./dist/lib";
+const sourceFolder = "src/lib";
+const destinationFolder = "dist/lib";
 const tsFile = /^(?!.*\.d\.ts$).*\.ts$/;
 
 readdirSync(sourceFolder).forEach((filePath) => {

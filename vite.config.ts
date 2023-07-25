@@ -1,6 +1,5 @@
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
-import { resolve } from "./vite.config.app.ts";
 
 import { defineConfig } from "vite";
 
@@ -16,10 +15,10 @@ export default defineConfig({
 });
 
 function getFilePaths(folderPath: string) {
-  return readdirSync(resolve(folderPath)).reduce((entries, filePath) => {
+  return readdirSync(folderPath).reduce((entries, filePath) => {
     if (/^(?!.*\.d\.ts$).*\.ts$/.test(filePath)) {
       const fileName = filePath.slice(0, filePath.lastIndexOf("."));
-      entries[`${fileName}.js`] = resolve(join(folderPath, filePath));
+      entries[`${fileName}.js`] = join(folderPath, filePath);
     }
     return entries;
   }, {} as Record<string, string>);

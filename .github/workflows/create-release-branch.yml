@@ -36,7 +36,7 @@ jobs:
           git checkout -b release
           git rm -rf .
           mkdir tmp-lib-dist
-          rsync -av dist/lib tmp-lib-dist
+          rsync -av dist/lib/ tmp-lib-dist
           rm -rf dist
           rsync -av tmp-lib-dist/ .
           rm -rf tmp-lib-dist

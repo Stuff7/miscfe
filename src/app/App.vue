@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import TestPreview, { type TestStats } from "@app/components/TestPreview.vue";
 import * as tests from "@app/tests";
+import type { JoinArrays } from "@lib/types";
 import { computed, reactive } from "vue";
 
+type TestModTestCase = JoinArrays<typeof tests[keyof typeof tests]["testCases"]>;
 const testStats = reactive({} as Record<keyof typeof tests, TestStats>);
 const totalTests = Object.values(tests).reduce((sum, { testCases }) => sum + testCases.length, 0);
 const totalStats = computed(() => Object.values(testStats).reduce((total, stats) => {
@@ -34,7 +36,7 @@ const totalStats = computed(() => Object.values(testStats).reduce((total, stats)
         :key="title"
         v-model:stats="testStats[title]"
         :title="title"
-        :test-cases="(test.testCases as any)"
+        :test-cases="(test.testCases as TestModTestCase)"
         :after-each="(test as typeof tests.storage).afterEach"
       />
     </article>

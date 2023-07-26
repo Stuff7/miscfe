@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     "./*": {
-      "import": "./*.js"
+      "import": "./*.js",
+      "types": "./*.d.ts"
     },
     "./*.scss": {
       "import": "./*.scss"

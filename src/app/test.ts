@@ -8,20 +8,18 @@ export default function useTestRunner<T, U>(
 ): [TestRecord<T, U>, () => void] {
   const tests = reactive<TestRecord<T, U>>({});
 
-  const runTests = () => testCases.forEach(([testDescription, assertion], i) => {
+  const runTests = () => testCases.forEach(([testDescription, assertion]) => {
     tests[testDescription] = { duration: parseDuration(0), status: "running" };
     const test = tests[testDescription];
     const start = performance.now();
-    setTimeout(() => {
-      try {
-        test.assertion = assertion();
-        test.status = test.assertion.success ? "passed" : "failed";
-      } catch (e) {
-        test.status = "error";
-        console.error("Error running test:", testDescription, "\n", e);
-        test.errorMessage = `${e}`;
-      }
-    }, 500 * i);
+    try {
+      test.assertion = assertion();
+      test.status = test.assertion.success ? "passed" : "failed";
+    } catch (e) {
+      test.status = "error";
+      console.error("Error running test:", testDescription, "\n", e);
+      test.errorMessage = `${e}`;
+    }
     test.duration = parseDuration(performance.now() - start);
     cleanup?.();
   });

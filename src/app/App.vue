@@ -34,7 +34,7 @@ const totalStats = computed(() => Object.values(testStats).reduce((total, stats)
         :key="title"
         v-model:stats="testStats[title]"
         :title="title"
-        :test-cases="test.testCases"
+        :test-cases="(test.testCases as any)"
         :after-each="(test as typeof tests.storage).afterEach"
       />
     </article>
@@ -60,7 +60,7 @@ const totalStats = computed(() => Object.values(testStats).reduce((total, stats)
       & > :first-child {
         flex: 1;
       }
-      background: var(--color-background-2);
+      background: var(--color-background-0);
       border-bottom: 1px solid var(--color-background-3);
       padding: var(--spacing-nm-100) var(--spacing-nm-200);
     }
@@ -83,7 +83,7 @@ const totalStats = computed(() => Object.values(testStats).reduce((total, stats)
     }
 
     .output {
-      background: var(--color-background-1);
+      background: var(--color-background-2);
       padding: var(--spacing-nm-100);
     }
   }

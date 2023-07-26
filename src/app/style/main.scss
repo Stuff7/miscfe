@@ -4,16 +4,24 @@
 
 @include font.load-font("Raleway");
 
+$light-0: #ffffff;
 $light-1: #f0f0f0;
 $light-2: #d8d8d8;
 $light-3: #c0c0c0;
 $light-accent: #41b883;
-$light-error: #f09d9d;
+$light-error: #f58b8b;
+$light-vanilla: #ffff9f;
+$light-success: #5cfa9e;
+$light-fail: #ffc0cb;
+$dark-0: #181818;
 $dark-1: #202020;
 $dark-2: #282828;
 $dark-3: #383838;
 $dark-accent: #2a7955;
 $dark-error: #cf0404;
+$dark-vanilla: #8a6301;
+$dark-success: #00612a;
+$dark-fail: #720011;
 
 :root {
   --spacing-nm-200: #{clamp(font.rem(16), 1vw, font.rem(20))};
@@ -29,6 +37,7 @@ $dark-error: #cf0404;
 }
 
 :root {
+  --color-background-0: #{$light-0};
   --color-background-1: #{$light-1};
   --color-background-2: #{$light-2};
   --color-background-3: #{$light-3};
@@ -37,8 +46,12 @@ $dark-error: #cf0404;
   --color-text-3: #{$dark-3};
   --color-accent: #{$dark-accent};
   --color-error: #{$dark-error};
+  --color-vanilla: #{$dark-vanilla};
+  --color-success: #{$dark-success};
+  --color-fail: #{$dark-fail};
 
   @media (prefers-color-scheme: dark) {
+    --color-background-0: #{$dark-0};
     --color-background-1: #{$dark-1};
     --color-background-2: #{$dark-2};
     --color-background-3: #{$dark-3};
@@ -47,6 +60,9 @@ $dark-error: #cf0404;
     --color-text-3: #{$light-3};
     --color-accent: #{$light-accent};
     --color-error: #{$light-error};
+    --color-vanilla: #{$light-vanilla};
+    --color-success: #{$light-success};
+    --color-fail: #{$light-fail};
   }
 }
 

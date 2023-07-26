@@ -1,9 +1,10 @@
 export function parseDuration(durationMs: number): Duration {
-  const milliseconds = durationMs % 1000;
-  const seconds = Math.floor(durationMs / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
+  const round = durationMs < 0 ? Math.ceil : Math.floor;
+  const milliseconds = round(durationMs % 1000);
+  const seconds = round(durationMs / 1000);
+  const minutes = round(seconds / 60);
+  const hours = round(minutes / 60);
+  const days = round(hours / 24);
 
   return {
     days,

@@ -2,7 +2,7 @@
 export type TestStats = { passed: number, failed: number, running: number };
 </script>
 
-<script setup lang="ts" generic="T, U, V extends TestCase<T, U>">
+<script setup lang="ts">
 import useTestRunner, { type TestCase, type TestResultStatus } from "@app/test";
 import { durationDisplay } from "@lib/time";
 import DIcon, { type IconName } from "d-components/DIcon.vue";
@@ -11,7 +11,7 @@ import { computed } from "vue";
 
 const props = defineProps<{
   title: string,
-  testCases: V[],
+  testCases: TestCase<unknown, unknown>[],
   afterEach?: () => void,
   stats?: TestStats,
 }>();
@@ -92,9 +92,13 @@ const suiteStatus = computed<TestResultStatus>(() => {
           <p>
             <strong>Expected: </strong>
             <b
-              v-if="result.assertion.check === 'non-equality'"
+              v-if="result.assertion.negate"
               :class="$style.error"
             >NOT </b>
+            <b
+              v-if="result.assertion.check === 'throws'"
+              :class="$style.error"
+            >to throw </b>
             <pre>{{ result.assertion.expected }}</pre>
           </p>
           <p>

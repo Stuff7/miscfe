@@ -1,5 +1,5 @@
 import { expect, it } from "@app/test";
-import { parseDuration, type Duration } from "@lib/time";
+import { parseDuration, type Duration, durationDisplay } from "@lib/time";
 
 export const testCases = [
   it("Handles 0 milliseconds", () => {
@@ -183,4 +183,61 @@ export const testCases = [
     };
     return expect(result).toEqual(expected);
   }),
+
+  // Test cases for valid input (Duration objects)
+  it("Returns correct duration string for Duration object", () => {
+    const durationObj = createDuration(2, 3, 15, 30, 500);
+    return expect(durationDisplay(durationObj)).toBe("2 days, 3h, 15m, 30s, 500ms");
+  }),
+
+  it("Returns correct duration string for Duration object with zero values", () => {
+    const durationObj = createDuration(0, 0, 0, 0, 0);
+    return expect(durationDisplay(durationObj)).toBe("0ms");
+  }),
+
+  it("Returns correct duration string for Duration object with single unit", () => {
+    const durationObj = createDuration(0, 0, 0, 0, 500);
+    return expect(durationDisplay(durationObj)).toBe("500ms");
+  }),
+
+  it("Returns correct duration string for Duration object with only higher units", () => {
+    const durationObj = createDuration(5, 0, 0, 0, 0);
+    return expect(durationDisplay(durationObj)).toBe("5 days");
+  }),
+
+  // Test cases for valid input (milliseconds)
+  it("Returns correct duration string for positive milliseconds", () => {
+    const milliseconds = 123456789;
+    return expect(durationDisplay(milliseconds)).toBe("1 day, 10h, 17m, 36s, 789ms");
+  }),
+
+  it("Returns correct duration string for zero milliseconds", () => {
+    const milliseconds = 0;
+    return expect(durationDisplay(milliseconds)).toBe("0ms");
+  }),
+
+  it("Returns correct duration string for negative milliseconds", () => {
+    const milliseconds = -123456789;
+    return expect(durationDisplay(milliseconds)).toBe("-1 day, -10h, -17m, -36s, -789ms");
+  }),
+
+  // Test cases for invalid input
+  it("Throws 'Invalid type passed' error for undefined input", () => {
+    // @ts-expect-error: Testing errors
+    return expect(() => durationDisplay(undefined)).toThrow("Invalid type passed");
+  }),
+
+  it("Throws 'Invalid type passed' error for null input", () => {
+    // @ts-expect-error: Testing errors
+    return expect(() => durationDisplay(null)).toThrow("Invalid type passed");
+  }),
+
+  it("Throws 'Invalid type passed' error for non-number and non-object input", () => {
+    // @ts-expect-error: Testing errors
+    return expect(() => durationDisplay("invalid")).toThrow("Invalid type passed");
+  }),
 ];
+
+function createDuration(days: number, hours: number, minutes: number, seconds: number, milliseconds: number) {
+  return { days, hours, minutes, seconds, milliseconds };
+}

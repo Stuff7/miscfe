@@ -36,40 +36,80 @@ export function each<I, T, U, V extends TestCase<T, U>>(items: I[], cb: (item: I
   return items.map((item) => cb(item as I)).flat();
 }
 
-export function expect<T>(thing: T) {
-  let invert = false;
+export function expect<T>(received: T) {
+  let negate = false;
 
   const methods = {
-    toBe<U>(expectedThing: T | U): Assertion<T, U> {
-      const success = thing === expectedThing;
+    toBe<U>(expected: T | U): Assertion<T, U> {
+      const success = received === expected;
       return {
-        success: invert ? !success : success,
-        check: invert ? "non-equality" : "equality",
-        received: thing,
-        expected: expectedThing,
+        success: negate ? !success : success,
+        check: "equality",
+        negate,
+        received,
+        expected,
       };
     },
-    toEqual<U>(expectedThing: T | U): Assertion<T, U> {
-      const success = deepCompare(thing as Record<string, unknown>, expectedThing as Record<string, unknown>);
+    toEqual<U>(expected: T | U): Assertion<T, U> {
+      const success = deepCompare(received as Record<string, unknown>, expected as Record<string, unknown>);
       return {
-        success: invert ? !success : success,
-        check: invert ? "non-equality" : "equality",
-        received: thing,
-        expected: expectedThing,
+        success: negate ? !success : success,
+        check: "equality",
+        negate,
+        received,
+        expected,
       };
+    },
+    toThrow<E extends Error | ErrorConstructor | string>(expected?: E): Assertion<unknown, typeof expected> {
+      const assertion: Assertion<unknown, typeof expected> = {
+        success: false,
+        check: "throws",
+        negate,
+        received,
+        expected,
+      };
+
+      const assert = (e: unknown) => {
+        const success = (
+          !expected ||
+          (expected instanceof Function && e instanceof expected) ||
+          ((expected instanceof Error || typeof expected === "string") &&
+            e instanceof Error && String(e).includes(String(expected))) ||
+          e === expected
+        );
+        assertion.received = e;
+        if (expected instanceof Function) {
+          assertion.expected = expected.name;
+        }
+        assertion.success = negate ? !success : success;
+        return assertion;
+      };
+
+      if (typeof received !== "function") {
+        return assert(received);
+      }
+
+      try {
+        assertion.received = received();
+        assertion.success = negate ? !assertion.success : assertion.success;
+        return assertion;
+      } catch(e) {
+        return assert(e);
+      }
     },
   };
 
   return new Proxy(methods as typeof methods & { not: typeof methods }, {
     get(target, prop) {
-      invert = prop === "not";
+      negate = prop === "not";
       return prop in target ? target[prop as keyof typeof target] : target;
     },
   });
 }
 
 export type Assertion<T, U> = {
-  check: "equality" | "non-equality",
+  check: "equality" | "throws",
+  negate: boolean,
   received: T,
   expected: T | U,
   success: boolean,

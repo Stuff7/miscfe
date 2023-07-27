@@ -18,16 +18,20 @@ export function parseDuration(durationMs: number): Duration {
 export function durationDisplay(duration: Duration | number): string {
   const d = typeof duration === "number" ? parseDuration(duration) : duration;
 
+  if (!d || typeof d !== "object") {
+    throw new TypeError(`Invalid type passed to durationDisplay: ${d && typeof d}`);
+  }
+
   return Object.entries(d).reduce((values, [unit, time]) => {
-    if (time || unit === "milliseconds") {
-      values.push(`${time}${unitDisplay[unit as keyof Duration][time === 1 ? 0 : 1]}`);
+    if (time || (!values.length && unit === "milliseconds")) {
+      values.push(`${time}${unitDisplay[unit as keyof Duration][Math.abs(time) === 1 ? 0 : 1]}`);
     }
     return values;
   }, [] as string[]).join(", ");
 }
 
 const unitDisplay: Record<keyof Duration, [singular: string, plural: string]> = {
-  days: ["day", "days"],
+  days: [" day", " days"],
   hours: ["h", "h"],
   minutes: ["m", "m"],
   seconds: ["s", "s"],

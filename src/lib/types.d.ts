@@ -1,4 +1,6 @@
 export type Option<T> = T | null;
+export type Indexable = string | number | symbol;
+export type MouseTouchEvent = MouseEvent | TouchEvent;
 
 /**
  * Transforms a union of different array types into an array of a union of those types.

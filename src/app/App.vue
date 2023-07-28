@@ -83,6 +83,9 @@ const totalStats = computed(() => Object.values(testStats).reduce((total, stats)
     }
 
     .output {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-nm-100);
       background: var(--color-background-2);
       padding: var(--spacing-nm-100);
     }

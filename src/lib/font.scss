@@ -22,23 +22,24 @@ $weight-name-map: (
   $font-variant: "Regular",
   $font-type: "ttf",
   $font-family: $font-name,
+  $folder: $fonts-folder,
 ) {
   font-family: $font-family;
   src: url(
-    $fonts-folder + "/" + $font-name + "/" + $font-name + "-" +
+    $folder + "/" + $font-name + "/" + $font-name + "-" +
     $font-variant + "." + $font-type
   );
   font-weight: $font-weight;
 }
 
-@mixin load-font($font-name, $font-type: "ttf", $blacklist: (), $font-family: $font-name) {
+@mixin load-font($font-name, $font-type: "ttf", $blacklist: (), $font-family: $font-name, $folder: $fonts-folder) {
   @each $font-weight, $font-variant in $weight-name-map {
     @if list.index($blacklist, $font-weight) == null {
       @font-face {
-        @include font-rules($font-name, $font-weight, $font-variant, $font-type, $font-family);
+        @include font-rules($font-name, $font-weight, $font-variant, $font-type, $font-family, $folder);
       }
       @font-face {
-        @include font-rules($font-name, $font-weight, $font-variant + "Italic", $font-type, $font-family);
+        @include font-rules($font-name, $font-weight, $font-variant + "Italic", $font-type, $font-family, $folder);
         font-style: italic;
       }
     }
@@ -51,9 +52,10 @@ $weight-name-map: (
   $font-variant: "Regular",
   $font-type: "ttf",
   $font-family: $font-name,
+  $folder: $fonts-folder,
 ) {
   @font-face {
-    @include font-rules($font-name, $font-weight, $font-variant, $font-type, $font-family);
+    @include font-rules($font-name, $font-weight, $font-variant, $font-type, $font-family, $folder);
   }
 }
 

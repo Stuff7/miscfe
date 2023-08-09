@@ -1,34 +1,49 @@
-name: Download and Push MinGW-w64
+name: Create GitHub Pages Branch
 
 on:
-  push:
-    branches:
-      - master
+  workflow_run:
+    workflows: [Create Release Branch]
+    types:
+      - completed
 
 jobs:
-  build:
+  create_github_pages_branch:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Extract MinGW-w64
-      run: |
-        mkdir mingw-w64
-        cd mingw-w64
-        wget https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/mingw-w64-x86_64-8.0.0-release-posix-seh-rt_v6-rev0.7z
-        7z x mingw-w64-x86_64-8.0.0-release-posix-seh-rt_v6-rev0.7z
-        cd ..
+      - name: Set up Git
+        run: |
+          git config --global user.email "cuentafrst@gmail.com"
+          git config --global user.name "Armando"
 
-    - name: Set up Git
-      run: |
-        git config user.email "action@github.com"
-        git config user.name "GitHub Action"
-        git checkout -b binaries
+      - name: Check out code
+        uses: actions/checkout@v3
 
-    - name: Push MinGW-w64
-      run: |
-        git add mingw-w64
-        git commit -m "Add MinGW-w64"
-        git push --force origin binaries
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.6.7
+
+      - name: Install dependencies
+        run: pnpm update
+
+      - name: Build app project
+        run: |
+          pnpm build:app
+          find . -name "node_modules" -type d -prune -exec rm -rf {} +
+
+      - name: Create GitHub Pages Branch
+        run: |
+          git checkout -b gh-pages
+          git rm -rf .
+          rsync -av dist/app/ .
+          rm -rf dist
+          git add .
+          git commit -m "Build static site."
+
+      - name: Push GitHub Pages Branch
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          force: true
